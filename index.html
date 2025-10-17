@@ -104,8 +104,8 @@
             animation: pulse-system 1s infinite;
         }
         @keyframes pulse-system {
-             0%, 100% { transform: scale(1); opacity: 1; filter: drop-shadow(0 0 5px #dc2626); }
-             50% { transform: scale(1.4); opacity: 0.8; filter: drop-shadow(0 0 18px #dc2626); }
+            0%, 100% { transform: scale(1); opacity: 1; filter: drop-shadow(0 0 5px #dc2626); }
+            50% { transform: scale(1.4); opacity: 0.8; filter: drop-shadow(0 0 18px #dc2626); }
         }
         
         /* Page transition */
@@ -151,6 +151,7 @@
                         <a href="#about-us" class="nav-link text-slate-300 hover:text-orange-400 font-medium">About Us</a>
                         <a href="#features" class="nav-link text-slate-300 hover:text-orange-400 font-medium">Features</a>
                         <a href="#map-section" class="nav-link text-slate-300 hover:text-orange-400 font-medium">Live Map</a>
+                        <a href="#emergency-contacts" class="nav-link text-slate-300 hover:text-orange-400 font-medium">Hotlines</a>
                     </div>
                     <button id="mobile-menu-button" class="md:hidden text-white">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-menu"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
@@ -164,6 +165,7 @@
                 <a href="#about-us" class="mobile-nav-link block py-2 px-6 text-slate-300 hover:bg-orange-400/20">About Us</a>
                 <a href="#features" class="mobile-nav-link block py-2 px-6 text-slate-300 hover:bg-orange-400/20">Features</a>
                 <a href="#map-section" class="mobile-nav-link block py-2 px-6 text-slate-300 hover:bg-orange-400/20">Live Map</a>
+                <a href="#emergency-contacts" class="mobile-nav-link block py-2 px-6 text-slate-300 hover:bg-orange-400/20">Hotlines</a>
             </div>
         </header>
 
@@ -224,7 +226,7 @@
                 <div class="container mx-auto px-6">
                     <div class="text-center mb-12" data-observe>
                         <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">Live Fire Alert Map</h2>
-                        <p class="text-slate-400 max-w-2xl mx-auto">Interactive map showing real-time fire reports and automatic system detections in the Philippines.</p>
+                        <p class="text-slate-400 max-w-2xl mx-auto">Interactive map showing real-time fire reports and automatic system detections in Tanauan City.</p>
                     </div>
                     <div id="main-map" class="map-container mb-8" data-observe></div>
                     <div class="flex flex-col sm:flex-row justify-center items-center gap-6 mb-8" data-observe>
@@ -236,6 +238,44 @@
                             <i data-lucide="siren" class="w-5 h-5"></i>
                             <span>Report a Fire Incident</span>
                         </button>
+                    </div>
+                </div>
+            </section>
+
+            <section id="emergency-contacts" class="py-20 md:py-32 bg-[#101010]">
+                <div class="container mx-auto px-6">
+                    <div class="text-center mb-16" data-observe>
+                        <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">Emergency Hotlines</h2>
+                        <p class="text-slate-400 max-w-2xl mx-auto">In case of emergency, please contact the relevant authorities in Tanauan City immediately.</p>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+                        <!-- BFP Tanauan -->
+                        <div class="glass-card rounded-lg p-6 text-center" data-observe>
+                            <div class="inline-block bg-red-500/10 p-4 rounded-full mb-4">
+                                <i data-lucide="flame" class="w-8 h-8 text-red-500"></i>
+                            </div>
+                            <h3 class="text-xl font-semibold text-white mb-2">BFP Tanauan City</h3>
+                            <p class="text-slate-400 mb-4">For fire-related emergencies.</p>
+                            <a href="tel:043-778-2111" class="text-orange-400 font-bold text-lg hover:underline">(043) 778-2111</a>
+                        </div>
+                        <!-- PNP Tanauan -->
+                        <div class="glass-card rounded-lg p-6 text-center" data-observe style="transition-delay: 150ms;">
+                            <div class="inline-block bg-blue-500/10 p-4 rounded-full mb-4">
+                                <i data-lucide="shield" class="w-8 h-8 text-blue-500"></i>
+                            </div>
+                            <h3 class="text-xl font-semibold text-white mb-2">PNP Tanauan City</h3>
+                            <p class="text-slate-400 mb-4">For police assistance.</p>
+                            <a href="tel:043-778-1166" class="text-orange-400 font-bold text-lg hover:underline">(043) 778-1166</a>
+                        </div>
+                        <!-- City Disaster Risk Reduction -->
+                        <div class="glass-card rounded-lg p-6 text-center" data-observe style="transition-delay: 300ms;">
+                             <div class="inline-block bg-green-500/10 p-4 rounded-full mb-4">
+                                <i data-lucide="activity" class="w-8 h-8 text-green-500"></i>
+                            </div>
+                            <h3 class="text-xl font-semibold text-white mb-2">CDRRMO Tanauan</h3>
+                            <p class="text-slate-400 mb-4">For disaster and medical response.</p>
+                            <a href="tel:043-706-7222" class="text-orange-400 font-bold text-lg hover:underline">(043) 706-7222</a>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -258,6 +298,7 @@
                             <li><a href="#introduction" class="hover:text-orange-400 transition-colors">Introduction</a></li>
                             <li><a href="#features" class="hover:text-orange-400 transition-colors">Features</a></li>
                             <li><a href="#map-section" class="hover:text-orange-400 transition-colors">Live Map</a></li>
+                            <li><a href="#emergency-contacts" class="hover:text-orange-400 transition-colors">Hotlines</a></li>
                         </ul>
                     </div>
                     <div>
@@ -270,9 +311,9 @@
                     <div>
                          <h4 class="font-semibold text-white mb-4">Follow Us</h4>
                          <div class="flex gap-4">
-                            <a href="#" class="bg-slate-800 hover:bg-orange-500 p-2 rounded-full transition-colors"><i data-lucide="twitter" class="w-5 h-5"></i></a>
-                            <a href="#" class="bg-slate-800 hover:bg-orange-500 p-2 rounded-full transition-colors"><i data-lucide="facebook" class="w-5 h-5"></i></a>
-                            <a href="#" class="bg-slate-800 hover:bg-orange-500 p-2 rounded-full transition-colors"><i data-lucide="linkedin" class="w-5 h-5"></i></a>
+                             <a href="#" class="bg-slate-800 hover:bg-orange-500 p-2 rounded-full transition-colors"><i data-lucide="twitter" class="w-5 h-5"></i></a>
+                             <a href="#" class="bg-slate-800 hover:bg-orange-500 p-2 rounded-full transition-colors"><i data-lucide="facebook" class="w-5 h-5"></i></a>
+                             <a href="#" class="bg-slate-800 hover:bg-orange-500 p-2 rounded-full transition-colors"><i data-lucide="linkedin" class="w-5 h-5"></i></a>
                          </div>
                     </div>
                 </div>
@@ -297,7 +338,7 @@
             <div class="max-w-4xl mx-auto">
                  <div class="relative">
                     <div class="flex flex-col sm:flex-row gap-2 mb-1">
-                        <input type="text" id="location-search-input" placeholder="Search for a location in the Philippines..." class="flex-grow bg-slate-800 text-white px-4 py-3 rounded-lg border border-slate-700 focus:outline-none focus:ring-2 focus:ring-orange-500">
+                        <input type="text" id="location-search-input" placeholder="Search for a location in Tanauan City..." class="flex-grow bg-slate-800 text-white px-4 py-3 rounded-lg border border-slate-700 focus:outline-none focus:ring-2 focus:ring-orange-500">
                         <button id="report-location-btn" class="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-300 flex items-center justify-center gap-2">
                             <i data-lucide="siren"></i> <span id="report-btn-text">Report</span>
                         </button>
@@ -322,10 +363,10 @@
                 </div>
             </div>
             <div id="alarm-view" class="hidden">
-                 <h2 class="text-2xl font-bold text-red-500 mb-4 animate-pulse">ALARM ACTIVATED</h2>
-                 <p class="text-slate-300 mb-6">A fire has been reported. This incident will now appear on the live map.</p>
+                 <h2 class="text-2xl font-bold text-orange-400 mb-4">REPORT RECEIVED</h2>
+                 <p class="text-slate-300 mb-6">Thank you for reporting. The BFP will respond to this immediately. This incident will now appear on the live map.</p>
                 <button id="silence-alarm-btn" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-8 rounded-full transition-transform transform hover:scale-105 duration-300">
-                    Acknowledge & Silence
+                    Close
                 </button>
             </div>
         </div>
@@ -476,7 +517,13 @@
             }
             
             // --- Map Initialization ---
-            const philippinesBounds = L.latLngBounds(L.latLng(4, 116), L.latLng(22, 127));
+            // Tighter Tanauan City specific settings
+            const tanauanCenter = [14.0855, 121.1475];
+            const tanauanBounds = L.latLngBounds(L.latLng(14.04, 121.08), L.latLng(14.14, 121.20));
+            const nominatimViewbox = '121.08,14.04,121.20,14.14'; // lon_min,lat_min,lon_max,lat_max
+            const tanauanInstituteCoords = [14.0885, 121.1495];
+
+
             const tileUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
             const tileAttribution = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
             
@@ -487,16 +534,39 @@
             }
             
             function initMainMap() {
-                mainMap = L.map(mainMapContainer, { maxBounds: philippinesBounds, minZoom: 5 }).setView([12.8797, 121.7740], 6);
+                mainMap = L.map(mainMapContainer, { maxBounds: tanauanBounds, minZoom: 12 }).setView(tanauanCenter, 13);
                 L.tileLayer(tileUrl, { attribution: tileAttribution }).addTo(mainMap);
-                addMarkerWithPopup(mainMap, [14.0855, 121.1475], systemFireIcon, "System Detection");
-                addMarkerWithPopup(mainMap, [14.5995, 120.9842], userFireIcon, "User Report");
-                addMarkerWithPopup(mainMap, [10.3157, 123.8854], systemFireIcon, "System Detection");
+                
+                // Add a visual boundary for Tanauan City
+                L.rectangle(tanauanBounds, { color: "#fb923c", weight: 2, fillOpacity: 0.05 }).addTo(mainMap);
+
+                // Highlight Tanauan Institute
+                L.circle(tanauanInstituteCoords, {
+                    color: '#6366f1', // indigo-500
+                    fillColor: '#818cf8', // indigo-400
+                    fillOpacity: 0.3,
+                    radius: 200 // in meters
+                }).addTo(mainMap).bindPopup("<b>Tanauan Institute</b><br>Highlighted Area");
+
+                // Sample markers within Tanauan City
+                addMarkerWithPopup(mainMap, [14.088, 121.149], systemFireIcon, "System Detection");
             }
             
             function initReportMap() {
-                reportMap = L.map(reportMapContainer, { maxBounds: philippinesBounds, minZoom: 5 }).setView([12.8797, 121.7740], 6);
+                reportMap = L.map(reportMapContainer, { maxBounds: tanauanBounds, minZoom: 12 }).setView(tanauanCenter, 13);
                 L.tileLayer(tileUrl, { attribution: tileAttribution }).addTo(reportMap);
+                
+                // Add a visual boundary for Tanauan City
+                L.rectangle(tanauanBounds, { color: "#fb923c", weight: 2, fillOpacity: 0.05 }).addTo(reportMap);
+
+                 // Highlight Tanauan Institute on report map
+                 L.circle(tanauanInstituteCoords, {
+                    color: '#6366f1',
+                    fillColor: '#818cf8',
+                    fillOpacity: 0.3,
+                    radius: 200
+                }).addTo(reportMap).bindPopup("<b>Tanauan Institute</b>");
+
                 reportMap.on('click', function(e) { handleReportAction(e.latlng); });
             }
 
@@ -514,7 +584,8 @@
                 const query = locationSearchInput.value;
                 if (query.length < 3) { suggestionsBox.innerHTML = ''; suggestionsBox.classList.add('hidden'); return; }
                 try {
-                    const response = await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&countrycodes=ph&limit=5&addressdetails=1`);
+                    // Use viewbox and bounded=1 to limit search to Tanauan
+                    const response = await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&countrycodes=ph&viewbox=${nominatimViewbox}&bounded=1&limit=5&addressdetails=1`);
                     const data = await response.json();
                     suggestionsBox.innerHTML = '';
                     if (data && data.length > 0) {
@@ -549,13 +620,14 @@
                 reportBtnText.textContent = "Reporting...";
                 reportLocationBtn.disabled = true;
                 try {
-                    const response = await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&countrycodes=ph&limit=1`);
+                     // Use viewbox and bounded=1 to limit search to Tanauan
+                    const response = await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&countrycodes=ph&viewbox=${nominatimViewbox}&bounded=1&limit=1`);
                     const data = await response.json();
                     if (data && data.length > 0) {
                         const loc = L.latLng(data[0].lat, data[0].lon);
                         reportMap.setView(loc, 17);
                         handleReportAction(loc);
-                    } else alert("Location not found. Please try a more specific query or click on the map.");
+                    } else alert("Location not found in Tanauan City. Please try a more specific query or click on the map.");
                 } catch (error) { alert("Could not perform search. Please check your connection."); }
                 finally { reportBtnText.textContent = "Report"; reportLocationBtn.disabled = false; }
             }
@@ -591,5 +663,4 @@
     </script>
 </body>
 </html>
-
 
