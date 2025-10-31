@@ -7,11 +7,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
-    <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
-    <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-    <!-- Tone.js for sound -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.77/Tone.js"></script>
     <style>
         body {
@@ -40,7 +37,7 @@
         }
         .glass-card:hover {
             transform: translateY(-5px);
-            border-color: rgba(251, 146, 60, 0.5); /* orange-400 with opacity */
+            border-color: rgba(251, 146, 60, 0.5);
             box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
         }
         .glass-card:active { transform: translateY(1px) scale(0.98); transition-duration: 0.1s; }
@@ -72,7 +69,7 @@
         [data-observe].visible { opacity: 1; transform: translateY(0); }
         .map-container { height: 500px; border-radius: 1rem; border: 2px solid rgba(255, 255, 255, 0.1); }
         .user-fire-marker {
-            color: #f59e0b; /* amber-500 */
+            color: #f59e0b;
             animation: pulse-user 2s infinite cubic-bezier(0.4, 0, 0.6, 1);
         }
         @keyframes pulse-user {
@@ -102,7 +99,6 @@
         .suggestion-item { padding: 0.75rem 1rem; cursor: pointer; transition: background-color 0.2s ease; }
         .suggestion-item:hover { background-color: #334155; }
         
-        /* Loading Spinner */
         #loading-overlay {
             z-index: 9999;
         }
@@ -124,7 +120,6 @@
 </head>
 <body class="antialiased">
 
-    <!-- Loading Overlay -->
     <div id="loading-overlay" class="fixed inset-0 bg-black/80 backdrop-blur-sm flex flex-col items-center justify-center transition-opacity duration-300">
         <div class="spinner"></div>
         <p class="text-white text-lg mt-4">Loading...</p>
@@ -155,7 +150,6 @@
                     </button>
                 </nav>
             </div>
-            <!-- Mobile Menu -->
             <div id="mobile-menu" class="hidden md:hidden bg-black/30 backdrop-blur-md">
                 <a href="#hero" class="mobile-nav-link block py-2 px-6 text-slate-300 hover:bg-orange-400/20">Home</a>
                 <a href="#introduction" class="mobile-nav-link block py-2 px-6 text-slate-300 hover:bg-orange-400/20">Introduction</a>
@@ -379,14 +373,11 @@
     </div>
 
     <script type="module">
-        // --- NO Firebase SDK Imports ---
-
-        // --- App State (local) ---
-        // Load reports from localStorage on startup
+        
         let userId = null;
         let localReports = JSON.parse(localStorage.getItem('ignisense_reports') || '[]');
 
-        // --- UI Elements ---
+        
         const loadingOverlay = document.getElementById('loading-overlay');
         const mainPage = document.getElementById('main-page');
         const reportPage = document.getElementById('report-page');
@@ -410,31 +401,30 @@
         const logoutBtnDesktop = document.getElementById('logout-button-desktop');
         const logoutBtnMobile = document.getElementById('logout-button-mobile');
 
-        // --- State Management ---
-        const fireMarkers = {}; // Use an object to store markers by report ID
+        
+        const fireMarkers = {};
         let mainMap, reportMap;
         let tempReportLocation = null;
         let reportMapMarker = null;
         let debounceTimer;
         let selectedSuggestionLocation = null;
         
-        // --- Auth Guard ---
+        
         function initializeAuthListener() {
-            // --- Insecure User Override Check ---
-            // Check for the flag set by the login page
+            
             if (localStorage.getItem("ignisense_user_override") === "true") {
                 console.warn("INSECURE USER OVERRIDE ACTIVE.");
                 userId = "hardcoded_user";
-                // Manually remove admin flag too, just in case
+                
                 localStorage.removeItem("ignisense_admin_override");
-                initializeAppLogic(); // Initialize the app
-                return; // Bypass all other checks
+                initializeAppLogic();
+                return;
             }
             
-            // Clear any hardcoded admin flags on page load (if user somehow got here)
+            
             localStorage.removeItem("ignisense_admin_override");
             
-            // If no override flag, redirect to login.
+            
             console.log("User is not authenticated. Redirecting to login.");
             loadingOverlay.innerHTML = `<p class="text-yellow-400 text-lg">Access Denied. Redirecting to login...</p>`;
             setTimeout(() => {
@@ -442,22 +432,22 @@
             }, 1000);
         }
 
-        // --- Main App Logic (runs after auth) ---
+        
         function initializeAppLogic() {
             lucide.createIcons();
             
-            // --- Logout Listeners ---
+            
             const handleLogout = async () => {
-                // Clear any override flags
+                
                 localStorage.removeItem("ignisense_user_override");
                 localStorage.removeItem("ignisense_admin_override");
-                // Redirect to login
+                
                 window.location.href = 'index.html'; 
             };
             logoutBtnDesktop.addEventListener('click', handleLogout);
             logoutBtnMobile.addEventListener('click', handleLogout);
             
-            // --- Hero Canvas Background Effect ---
+            
             const heroCanvas = document.getElementById('hero-canvas');
             if (heroCanvas) {
                 const ctx = heroCanvas.getContext('2d');
@@ -494,7 +484,7 @@
 
                         ctx.beginPath();
                         ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-                        ctx.fillStyle = `rgba(251, 146, 60, ${p.opacity})`; // orange-400
+                        ctx.fillStyle = `rgba(251, 146, 60, ${p.opacity})`;
                         ctx.fill();
                     });
                     requestAnimationFrame(animateParticles);
@@ -513,20 +503,20 @@
                 });
             }
             
-            // --- Page Navigation ---
+            
             function showReportPage() { mainPage.classList.add('hidden'); reportPage.classList.remove('hidden'); window.scrollTo(0, 0); if (!reportMap) initReportMap(); }
             function showMainPage() { reportPage.classList.add('hidden'); mainPage.classList.remove('hidden'); window.scrollTo(0, 0); }
             goToReportButtons.forEach(btn => btn.addEventListener('click', showReportPage));
             backToMainBtn.addEventListener('click', showMainPage);
 
-            // --- Mobile Menu ---
+            
             const mobileMenuButton = document.getElementById('mobile-menu-button');
             const mobileMenu = document.getElementById('mobile-menu');
             const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
             mobileMenuButton.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
             mobileNavLinks.forEach(link => link.addEventListener('click', () => mobileMenu.classList.add('hidden')));
 
-            // --- Header Scroll Effect ---
+            
             const header = document.getElementById('header');
             window.addEventListener('scroll', () => {
                 header.classList.toggle('bg-black/50', window.scrollY > 50);
@@ -534,13 +524,13 @@
                 header.classList.toggle('shadow-lg', window.scrollY > 50);
             });
 
-            // --- Intersection Observer for Animations ---
+            
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
             }, { threshold: 0.1 });
             document.querySelectorAll('[data-observe]').forEach(el => observer.observe(el));
 
-            // --- Map Icons and Sound ---
+            
             const userFireIcon = L.divIcon({ html: `<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="user-fire-marker"><path d="m21.73 18-8-14a2 2 0 0 0-3.46 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>`, className: '', iconSize: [40, 40], iconAnchor: [20, 40] });
             const systemFireIcon = L.divIcon({ html: `<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="system-fire-marker"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>`, className: '', iconSize: [40, 40], iconAnchor: [20, 40] });
 
@@ -553,7 +543,7 @@
             }
             function stopAlarm() { if (alarmLoop) { Tone.Transport.stop(); Tone.Transport.cancel(); alarmLoop.dispose(); } }
 
-            // --- Geocoding and Map Setup ---
+            
             async function getLocationName(lat, lng) {
                 try {
                     const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1`);
@@ -577,7 +567,7 @@
             const tileAttribution = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
             
             async function addMarkerWithPopup(map, latlng, icon, title, markerId) {
-                // Clear existing marker first if it exists
+                
                 if(fireMarkers[markerId]) {
                    map.removeLayer(fireMarkers[markerId]);
                 }
@@ -585,7 +575,7 @@
                 const marker = L.marker(latlng, { icon: icon }).addTo(map);
                 const locationName = await getLocationName(latlng[0], latlng[1]);
                 marker.bindPopup(`<b>${title}</b><br>${locationName}`);
-                fireMarkers[markerId] = marker; // Store marker by its ID
+                fireMarkers[markerId] = marker;
             }
             
             function removeMarker(markerId) {
@@ -608,17 +598,17 @@
                     radius: 200
                 }).addTo(mainMap).bindPopup("<b>Tanauan Institute</b><br>Highlighted Area");
                 
-                // Clear all markers
+                
                 Object.keys(fireMarkers).forEach(removeMarker);
                 
-                // Add reports from localStorage
+                
                 localReports.forEach(report => {
                     const icon = report.type === 'user' ? userFireIcon : systemFireIcon;
                     const title = report.type === 'user' ? "User Report" : "System Detection";
                     addMarkerWithPopup(mainMap, [report.lat, report.lng], icon, title, report.id);
                 });
                 
-                // Hide loading overlay once map is set up
+                
                 loadingOverlay.classList.add('opacity-0', 'pointer-events-none');
             }
             
@@ -695,7 +685,7 @@
                         handleReportAction(loc);
                     } else {
                         console.warn("Location not found in Tanauan City. Please try a more specific query or click on the map.");
-                        // Show error in modal
+                        
                         errorMessageText.textContent = "Location not found. Please try a more specific search or click on the map.";
                         alarmModal.classList.remove('hidden');
                         confirmationView.classList.add('hidden');
@@ -728,22 +718,22 @@
                 if (tempReportLocation) {
                     try {
                         const reportId = `user-${Date.now()}`;
-                        // Create new report object to save locally
+                        
                         const newReport = {
                             id: reportId,
                             lat: tempReportLocation.lat,
                             lng: tempReportLocation.lng,
                             type: 'user',
                             timestamp: Date.now(),
-                            reportedBy: userId // 'hardcoded_user'
+                            reportedBy: userId
                         };
 
-                        // Add to local array
+                        
                         localReports.push(newReport);
-                        // Save to localStorage
+                        
                         localStorage.setItem('ignisense_reports', JSON.stringify(localReports));
                         
-                        // Add marker to the main map
+                        
                         addMarkerWithPopup(mainMap, [newReport.lat, newReport.lng], userFireIcon, "User Report", reportId);
                         
                         console.log("Report submitted locally with ID:", reportId);
@@ -772,7 +762,7 @@
                 showMainPage(); 
                 if (lastReported) { mainMap.setView(lastReported, 16); } 
                 tempReportLocation = null;
-                 // Reset modal for next time
+                 
                 setTimeout(() => {
                     confirmationView.classList.remove('hidden');
                     alarmView.classList.add('hidden');
@@ -794,21 +784,21 @@
                 }, 300);
             });
 
-            // This listener updates the map if localStorage is changed in *another* tab (e.g., admin)
+            
             window.addEventListener('storage', (event) => {
                 if (event.key === 'ignisense_reports') {
                     console.log("Report data updated from another page. Reloading map.");
                     localReports = JSON.parse(event.newValue || '[]');
-                    // Re-initialize the main map to show changes
+                    
                     initMainMap();
                 }
             });
 
-            // Initialize the map and listeners
+            
             initMainMap();
         }
         
-        // Start the auth check
+        
         document.addEventListener('DOMContentLoaded', initializeAuthListener);
 
     </script>

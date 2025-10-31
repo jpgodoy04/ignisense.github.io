@@ -7,15 +7,12 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
-    <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
-    <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <style>
         body {
             font-family: 'Inter', sans-serif;
             color: #e2e8f0;
-            /* NEW: Added background from user page */
             background-color: #0a0a0a;
             background-image:
                 radial-gradient(at 27% 37%, hsla(215, 98%, 42%, 0.1) 0px, transparent 50%),
@@ -29,14 +26,13 @@
         ::-webkit-scrollbar-thumb:hover { background-color: #fb923c; } 
         
         .map-container {
-            height: 500px; /* Taller map */
+            height: 500px;
             border-radius: 1rem;
             border: 2px solid rgba(255, 255, 255, 0.1);
         }
 
-        /* Marker styles copied from index.html for consistency */
         .user-fire-marker {
-            color: #f59e0b; /* amber-500 */
+            color: #f59e0b;
             animation: pulse-user 2s infinite cubic-bezier(0.4, 0, 0.6, 1);
         }
         @keyframes pulse-user {
@@ -52,7 +48,6 @@
             50% { transform: scale(1.4); opacity: 0.8; filter: drop-shadow(0 0 18px #dc2626); }
         }
 
-        /* Loading Spinner */
         #loading-overlay { z-index: 9999; }
         .spinner {
             width: 56px;
@@ -69,22 +64,18 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* Hide content until auth is checked */
         #admin-content { display: none; }
     </style>
 </head>
 <body class="antialiased">
 
-    <!-- NEW: Background Canvas -->
     <canvas id="admin-canvas" class="fixed top-0 left-0 w-full h-full z-[-1]"></canvas>
 
-    <!-- Loading / Auth Check Overlay -->
     <div id="loading-overlay" class="fixed inset-0 bg-black/80 backdrop-blur-sm flex flex-col items-center justify-center transition-opacity duration-300 z-[9999]">
         <div class="spinner"></div>
         <p id="loading-text" class="text-white text-lg mt-4">Verifying credentials...</p>
     </div>
 
-    <!-- Admin Content - Hidden by default -->
     <div id="admin-content">
         <header class="bg-slate-900 shadow-lg sticky top-0 z-50">
             <div class="container mx-auto px-6 py-4">
@@ -106,7 +97,6 @@
         <main class="container mx-auto px-6 py-12">
             <h1 class: "text-3xl md:text-4xl font-bold text-white mb-8">Admin Dashboard</h1>
             
-            <!-- NEW: Stats Cards -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                 <div class="bg-slate-800/50 border border-slate-700 p-6 rounded-lg flex items-center gap-4">
                     <div class="bg-blue-500/10 p-3 rounded-full">
@@ -138,7 +128,6 @@
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <!-- Left Column: Map and Controls -->
                 <div class="lg:col-span-2 space-y-8">
                     <div>
                         <h2 class="text-2xl font-semibold text-white mb-4">Live Report Map</h2>
@@ -158,12 +147,10 @@
                     </div>
                 </div>
 
-                <!-- Right Column: Report List -->
                 <div class="lg:col-span-1">
                     <h2 class="text-2xl font-semibold text-white mb-4">Active Reports</h2>
                     <div id="report-list-container" class="bg-slate-900/50 border border-slate-700 rounded-lg max-h-[700px] overflow-y-auto">
                         <div id="report-list" class="divide-y divide-slate-700">
-                            <!-- Reports will be injected here by JS -->
                             <p id="no-reports-msg" class="p-6 text-slate-400 text-center">No active reports found.</p>
                         </div>
                     </div>
@@ -173,16 +160,12 @@
     </div>
 
     <script type="module">
-        // --- NO Firebase Imports ---
-
         let adminUserId = null;
-        // Load reports from localStorage on startup
         let localReports = JSON.parse(localStorage.getItem('ignisense_reports') || '[]');
         
-        const fireMarkers = {}; // Store markers by report ID
+        const fireMarkers = {};
         let adminMap;
 
-        // --- UI Elements ---
         const loadingOverlay = document.getElementById('loading-overlay');
         const loadingText = document.getElementById('loading-text');
         const adminContent = document.getElementById('admin-content');
@@ -192,16 +175,13 @@
         const simulateFireBtn = document.getElementById('simulate-fire-btn');
         const adminMapContainer = document.getElementById('admin-map');
         
-        // --- NEW: Stat Card UI Elements ---
         const statTotalReports = document.getElementById('stat-total-reports');
         const statUserReports = document.getElementById('stat-user-reports');
         const statSystemReports = document.getElementById('stat-system-reports');
         
-        // --- Map Icons (copied from user_home.html) ---
         const userFireIcon = L.divIcon({ html: `<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="user-fire-marker"><path d="m21.73 18-8-14a2 2 0 0 0-3.46 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>`, className: '', iconSize: [40, 40], iconAnchor: [20, 40] });
         const systemFireIcon = L.divIcon({ html: `<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="system-fire-marker"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>`, className: '', iconSize: [40, 40], iconAnchor: [20, 40] });
 
-        // --- Geocoding (cached for performance) ---
         const locationCache = new Map();
         async function getLocationName(lat, lng) {
             const key = `${lat.toFixed(5)},${lng.toFixed(5)}`;
@@ -224,12 +204,11 @@
             } catch (error) { 
                 console.error("Reverse geocoding error:", error); 
                 const fallback = `Lat: ${lat.toFixed(4)}, Lng: ${lng.toFixed(4)}`;
-                locationCache.set(key, fallback); // Cache failure to avoid re-fetching
+                locationCache.set(key, fallback);
                 return fallback;
             }
         }
 
-        // --- NEW: Hero Canvas Background Effect ---
         const heroCanvas = document.getElementById('admin-canvas');
         let heroCtx;
         let particles = [];
@@ -269,7 +248,7 @@
 
                 heroCtx.beginPath();
                 heroCtx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-                heroCtx.fillStyle = `rgba(251, 146, 60, ${p.opacity})`; // orange-400
+                heroCtx.fillStyle = `rgba(251, 146, 60, ${p.opacity})`;
                 heroCtx.fill();
             });
             requestAnimationFrame(animateParticles);
@@ -286,26 +265,20 @@
             });
         };
 
-        // --- App Initialization (called after auth success) ---
         function initializeApp() {
-            // ***FIX: Make content visible BEFORE initializing map***
             adminContent.style.display = 'block';
 
             lucide.createIcons();
             
-            // Init map and listeners
             initAdminMap();
             setupListeners();
-            updateDashboard(); // Initial render of stats, map, and list
+            updateDashboard();
             
-            // NEW: Initialize canvas background
             initHeroCanvas();
             
-            // Show content and hide loading
             loadingOverlay.classList.add('opacity-0', 'pointer-events-none');
         }
         
-        // --- Map Functions ---
         const tanauanCenter = [14.0855, 121.1475];
         const tanauanBounds = L.latLngBounds(L.latLng(14.04, 121.08), L.latLng(14.14, 121.20));
         const tanauanInstituteCoords = [14.0885, 121.1495];
@@ -317,7 +290,6 @@
             L.tileLayer(tileUrl, { attribution: tileAttribution }).addTo(adminMap);
             L.rectangle(tanauanBounds, { color: "#fb923c", weight: 2, fillOpacity: 0.05 }).addTo(adminMap);
             
-            // ***FIX: Force map to redraw after it's visible***
             setTimeout(() => adminMap.invalidateSize(), 100);
         }
 
@@ -326,7 +298,6 @@
             const icon = report.type === 'user' ? userFireIcon : systemFireIcon;
             const title = report.type === 'user' ? "User Report" : "System Detection";
             
-            // Clear existing marker first
             if(fireMarkers[reportId]) {
                adminMap.removeLayer(fireMarkers[reportId]);
             }
@@ -344,29 +315,25 @@
             }
         }
 
-        // --- NEW: Central Dashboard Update Function ---
         async function updateDashboard() {
             console.log("Updating dashboard...");
-            // Update Stats
             const userReports = localReports.filter(r => r.type === 'user').length;
             const systemReports = localReports.filter(r => r.type === 'system').length;
             statTotalReports.textContent = localReports.length;
             statUserReports.textContent = userReports;
             statSystemReports.textContent = systemReports;
 
-            // Update Report List
             if (localReports.length === 0) {
                 noReportsMsg.classList.remove('hidden');
-                reportList.innerHTML = ''; // Clear list
+                reportList.innerHTML = '';
             } else {
                 noReportsMsg.classList.add('hidden');
-                reportList.innerHTML = ''; // Clear list before re-populating
+                reportList.innerHTML = '';
 
-                // Sort reports by timestamp, newest first
                 localReports.sort((a, b) => b.timestamp - a.timestamp);
 
                 for (const report of localReports) {
-                    const data = report; // The report object is the data
+                    const data = report;
                     const id = report.id;
                     const locationName = await getLocationName(data.lat, data.lng);
                     const timestamp = new Date(data.timestamp).toLocaleString();
@@ -394,21 +361,17 @@
                     reportList.appendChild(reportElement);
                 }
                 
-                // Re-create icons and add delete listeners
                 lucide.createIcons();
                 document.querySelectorAll('.delete-report-btn').forEach(button => {
                     button.addEventListener('click', handleDeleteReport);
                 });
             }
 
-            // Update Map
-            // Remove markers that are no longer in localReports
             Object.keys(fireMarkers).forEach(markerId => {
                 if (!localReports.some(report => report.id === markerId)) {
                     removeMarkerFromAdminMap(markerId);
                 }
             });
-            // Add/Update markers that are in localReports
             for (const report of localReports) {
                 await addMarkerToAdminMap(report, report.id);
             }
@@ -419,11 +382,8 @@
             
             if (confirm(`Are you sure you want to delete report ${id}?`)) {
                 try {
-                    // Remove from local array
                     localReports = localReports.filter(report => report.id !== id);
-                    // Save updated array to localStorage
                     localStorage.setItem('ignisense_reports', JSON.stringify(localReports));
-                    // Update all UI elements
                     updateDashboard();
                     console.log("Report deleted:", id);
                 } catch (error) {
@@ -441,19 +401,16 @@
                 const id = `system-${Date.now()}`;
                 const newReport = {
                     id: id,
-                    lat: tanauanInstituteCoords[0] + (Math.random() - 0.5) * 0.001, // Add jitter
+                    lat: tanauanInstituteCoords[0] + (Math.random() - 0.5) * 0.001,
                     lng: tanauanInstituteCoords[1] + (Math.random() - 0.5) * 0.001,
                     type: 'system',
                     timestamp: Date.now(),
-                    reportedBy: adminUserId // 'hardcoded_admin'
+                    reportedBy: adminUserId
                 };
                 
-                // Add to local array
                 localReports.push(newReport);
-                // Save updated array to localStorage
                 localStorage.setItem('ignisense_reports', JSON.stringify(localReports));
 
-                // Update all UI elements
                 updateDashboard();
                 
                 console.log("Simulated fire report added:", id);
@@ -467,46 +424,34 @@
             }
         }
 
-        // --- Event Listeners Setup ---
         function setupListeners() {
-            // Logout
             logoutButton.addEventListener('click', async () => {
-                // Clear the override flag on logout
                 localStorage.removeItem("ignisense_admin_override");
                 localStorage.removeItem("ignisense_user_override");
-                // Redirect to login
                 window.location.href = 'index.html';
             });
 
-            // Simulate Fire
             simulateFireBtn.addEventListener('click', handleSimulateFire);
 
-            // This listener updates the dashboard if localStorage is changed in *another* tab
             window.addEventListener('storage', (event) => {
                 if (event.key === 'ignisense_reports') {
                     console.log("Report data updated from user page. Reloading dashboard.");
                     localReports = JSON.parse(event.newValue || '[]');
-                    // Re-initialize the dashboard to show changes
                     updateDashboard();
                 }
             });
         }
 
-        // --- Start the App ---
         document.addEventListener('DOMContentLoaded', () => {
-            // --- Insecure Admin Override Check ---
-            // Check for the flag set by the login page *immediately*
             if (localStorage.getItem("ignisense_admin_override") === "true") {
                 console.warn("INSECURE ADMIN OVERRIDE ACTIVE.");
                 adminUserId = "hardcoded_admin";
-                initializeApp(); // Initialize the admin dashboard
+                initializeApp();
             } else {
-                // No override flag, redirect to login.
                 console.log("No admin override flag found. Redirecting to login.");
-                // We show the loading text for a brief moment before redirecting
                 loadingText.textContent = "Access Denied. Redirecting...";
                 setTimeout(() => {
-                    window.location.href = 'index.html';
+                    window.location.href = 'index.HhTmLl';
                 }, 1000);
             }
         });
